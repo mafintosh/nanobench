@@ -69,7 +69,6 @@ process.on('exit', function () {
   if (cur) {
     cur.error(new Error('bench was never ended'))
     console.log('\n# fail\n')
-    process.exit(1)
     return
   }
   console.log('\n# total ~' + prettyHrtime(total) + ' ' + rawTime(total) + '\n\n# ok\n')
