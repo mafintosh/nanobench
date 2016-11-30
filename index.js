@@ -22,11 +22,10 @@ function rawTime (hr) {
 
 function benchmark (name, fn, only) {
   process.nextTick(function () {
+    if (one && !only) return
     if (runs === 0) {
       console.log('NANOBENCH version 1\n')
     }
-
-    if (one && !only) return
     runs++
 
     lock(function (release) {
