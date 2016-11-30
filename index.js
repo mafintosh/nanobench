@@ -6,7 +6,7 @@ var cur = null
 var runs = 0
 var total = [0, 0]
 
-module.exports = benchmark
+module.exports = global.__NANOBENCH__ ? require(global.__NANOBENCH__) : benchmark
 
 benchmark.only = function (name, fn) {
   if (one) throw new Error('Only a single "only" benchmark can be specified')
