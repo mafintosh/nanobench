@@ -36,37 +36,22 @@ bench('sha1 200.000 times', function (b) {
 
   b.end()
 })
-
-bench('sha256 200.000 times', function (b) {
-  var crypto = require('crypto')
-  var data = new Buffer('hello world')
-
-  b.start()
-
-  for (var i = 0; i < 200000; i++) {
-    data = crypto.createHash('sha256').update(data).digest()
-  }
-
-  b.end()
-})
 ```
 
 Running the above will produce output similar to this:
 
 ```
 NANOBENCH version 2
-> git checkout 7369272 && node example.js
-
-# sha256 200.000 times
-ok ~664 ms (0 s + 663775913 ns)
+> node example.js
 
 # sha1 200.000 times
-ok ~564 ms (0 s + 563784403 ns)
+ok ~554 ms (0 s + 554449000 ns)
 
 # sha256 200.000 times
-ok ~575 ms (0 s + 575039783 ns)
+ok ~598 ms (0 s + 597703365 ns)
 
-ok ~1.8 s (1 s + 802600099 ns)
+all benchmarks completed
+ok ~1.15 s (1 s + 152152365 ns)
 ```
 
 ## API
@@ -112,7 +97,7 @@ If you parse the above example output an object similar to this will be printed 
 ``` js
 { type: 'NANOBENCH',
   version: 2,
-  command: 'git checkout 7369272 && nanobench example.js',
+  command: 'nanobench example.js',
   benchmarks:
    [ { name: 'sha256 200.000 times',
        output: [],

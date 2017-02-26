@@ -1,6 +1,5 @@
 var mutexify = require('mutexify')
 var prettyHrtime = require('pretty-hrtime')
-var proc = require('child_process')
 var path = require('path')
 var lock = mutexify()
 var one = false
@@ -26,12 +25,7 @@ function benchmark (name, fn, only) {
   process.nextTick(function () {
     if (one && !only) return
     if (runs === 0) {
-      lock(function (release) {
-        gitHash(function (_, hash) {
-          console.log('NANOBENCH version 2\n> ' + command(hash) + '\n')
-          release()
-        })
-      })
+      console.log('NANOBENCH version 2\n> ' + command() + '\n')
     }
 
     runs++
@@ -52,7 +46,7 @@ function benchmark (name, fn, only) {
       }
 
       b.log = function (msg) {
-
+        console.log('# ' + msg)
       }
 
       b.end = function (msg) {
@@ -83,10 +77,11 @@ process.on('exit', function () {
     console.log('fail\n')
     return
   }
+  console.log('all benchmarks completed')
   console.log('ok ~' + prettyHrtime(total) + ' ' + rawTime(total) + '\n')
 })
 
-function command (hash) {
+function command () {
   var argv = process.argv.slice(0)
   if (argv[0] === '/usr/local/bin/node') argv[0] = 'node'
   if (argv[1] === path.join(__dirname, 'run.js')) {
@@ -99,14 +94,5 @@ function command (hash) {
     return name.indexOf(cwd) === 0 ? name.slice(cwd.length) : name
   })
 
-  return (hash ? 'git checkout ' + hash + ' && ' : '') + argv.join(' ')
-}
-
-function gitHash (cb) {
-  proc.exec("git log --pretty=format:'%h' -n 1", function (err, stdout) {
-    if (err) return cb(null, null)
-    var hash = stdout.trim()
-    if (!/[0-9a-f]/.test(hash)) return cb(null, null)
-    cb(null, hash)
-  })
+  return argv.join(' ')
 }
