@@ -82,6 +82,40 @@ npm install -g nanobench
 nanobench benchmarks/*.js
 ```
 
+## Comparing benchmarks
+
+A comparison tool for comparing two benchmark outputs is included as well.
+This is useful if fx you ran a benchmark on two different git checkouts and want to compare which
+one was the fastest one
+
+``` sh
+> git checkout hash-using-sha256
+> node benchmark.js > output-sha256
+> git checkout hash-using-blake2b
+> node benchmark.js > output-blake2b
+
+nanobench-compare output-sha256 output-blake2b
+```
+
+The compare tool will print out something like this
+
+```
+NANOBENCH version 2               |    NANOBENCH version 2
+> node benchmark.js               |    > node benchmark.js
+                                  |
+# hashing 200.000 times          >>>   # hashing 200.000 times
+# (using sha256)                 >>>   # (using blake2b)
+ok ~591 ms (0 s + 590687187 ns)  >>>   ok ~95 ms (0 s + 95347216 ns)
+                                  |
+all benchmarks completed         >>>   all benchmarks completed
+ok ~591 ms (0 s + 590687187 ns)  >>>   ok ~95 ms (0 s + 95347216 ns)
+                                  |
+```
+
+Where `>>>` means that right one was faster, `<<<` that the left one was, and `===` that they were within 5% of other
+
+
+
 ## Parser
 
 An parser for the output format is included as well. You can require it from node using
