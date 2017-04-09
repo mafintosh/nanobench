@@ -77,7 +77,7 @@ process.on('exit', function () {
     console.log('fail\n')
     return
   }
-  console.log('all benchmarks completed')
+  console.log('# all benchmarks completed')
   console.log('ok ~' + prettyHrtime(total) + ' ' + rawTime(total) + '\n')
 })
 

@@ -50,7 +50,7 @@ ok ~554 ms (0 s + 554449000 ns)
 # sha256 200.000 times
 ok ~598 ms (0 s + 597703365 ns)
 
-all benchmarks completed
+# all benchmarks completed
 ok ~1.15 s (1 s + 152152365 ns)
 ```
 
@@ -107,7 +107,7 @@ NANOBENCH version 2               |    NANOBENCH version 2
 # (using sha256)                 >>>   # (using blake2b)
 ok ~591 ms (0 s + 590687187 ns)  >>>   ok ~95 ms (0 s + 95347216 ns)
                                   |
-all benchmarks completed         >>>   all benchmarks completed
+# all benchmarks completed       >>>   # all benchmarks completed
 ok ~591 ms (0 s + 590687187 ns)  >>>   ok ~95 ms (0 s + 95347216 ns)
                                   |
 ```

@@ -56,7 +56,7 @@ list.forEach(function (bench) {
 var last = compare(a.time, b.time)
 var sep = last === 1 ? '>' : last === -1 ? '<' : '='
 
-write('all benchmarks completed', sep, 'all benchmarks completed')
+write('# all benchmarks completed', sep, '# all benchmarks completed')
 write(result(a), sep, result(b))
 write('', '|', '')
 
