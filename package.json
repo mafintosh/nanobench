@@ -1,6 +1,6 @@
 {
   "name": "nanobench",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Simple benchmarking tool with TAP-like output that is easy to parse",
   "main": "index.js",
   "dependencies": {
