@@ -1,4 +1,5 @@
 var mutexify = require('mutexify')
+var hrtime = require('browser-process-hrtime')
 var prettyHrtime = require('pretty-hrtime')
 var path = require('path')
 var lock = mutexify()
@@ -33,10 +34,10 @@ function benchmark (name, fn, only) {
       console.log('# ' + name)
 
       var b = cur = {}
-      var begin = process.hrtime()
+      var begin = hrtime()
 
       b.start = function () {
-        begin = process.hrtime()
+        begin = hrtime()
       }
 
       b.error = function (err) {
@@ -53,7 +54,7 @@ function benchmark (name, fn, only) {
         if (msg) b.log(msg)
 
         cur = null
-        var time = process.hrtime(begin)
+        var time = hrtime(begin)
 
         total[0] += time[0]
         total[1] += time[1]
