@@ -11,6 +11,7 @@ bench('sha1 200.000 times', function (b) {
   }
 
   b.end()
+  b.done()
 })
 
 bench('sha256 200.000 times', function (b) {
@@ -24,4 +25,5 @@ bench('sha256 200.000 times', function (b) {
   }
 
   b.end()
+  b.done()
 })

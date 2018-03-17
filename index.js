@@ -64,6 +64,9 @@ function benchmark (name, fn, only) {
         }
 
         console.log('ok ~' + prettyHrtime(time) + ' ' + rawTime(time) + '\n')
+      }
+
+      b.done = function () {
         release()
       }
 
