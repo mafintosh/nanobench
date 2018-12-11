@@ -56,7 +56,7 @@ ok ~1.15 s (1 s + 152152365 ns)
 
 ## API
 
-#### `benchmark(name, run)`
+#### `benchmark(name, [opts, ] run)`
 
 Add a new benchmark. `run` is called with a benchmark object, `b` that has the following methods
 
@@ -64,6 +64,13 @@ Add a new benchmark. `run` is called with a benchmark object, `b` that has the f
 * `b.end()` - End the benchmark.
 * `b.error(err)` - Benchmark failed. Report error.
 * `b.log(msg)` - Log out a message
+
+You can also pass an options object, where you can specify how many benchmark repetitions should be done before measuring the final time.
+``` js
+bench('benchmark name', { repetitions: 5 }, function (b) {
+  // your code
+})
+```
 
 #### `benchmark.skip(name, run)`
 
