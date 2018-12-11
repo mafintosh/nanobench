@@ -1,3 +1,5 @@
+'use strict'
+
 var mutexify = require('mutexify')
 var hrtime = require('browser-process-hrtime')
 var prettyHrtime = require('pretty-hrtime')
@@ -22,16 +24,25 @@ function rawTime (hr) {
   return '(' + hr[0] + ' s + ' + hr[1] + ' ns)'
 }
 
-function benchmark (name, fn, only) {
-  process.nextTick(function () {
-    if (one && !only) return
-    if (runs === 0) {
-      console.log('NANOBENCH version 2\n> ' + command() + '\n')
-    }
+function benchmark (name, opts, fn, only) {
+  if (typeof opts === 'function') {
+    only = fn
+    fn = opts
+    opts = {}
+  }
 
-    runs++
-    lock(function (release) {
-      console.log('# ' + name)
+  lock(function (release) {
+    var repetitions = opts.repetitions || 1
+    process.nextTick(run)
+
+    function run () {
+      if (one && !only) return
+      if (runs === 0) {
+        console.log('NANOBENCH version 2\n> ' + command() + '\n')
+      }
+
+      runs++
+      log('# ' + name)
 
       var b = cur = {}
       var begin = hrtime()
@@ -42,12 +53,12 @@ function benchmark (name, fn, only) {
 
       b.error = function (err) {
         cur = null
-        console.log('fail ' + err.message + '\n')
+        log('fail ' + err.message + '\n')
         release()
       }
 
       b.log = function (msg) {
-        console.log('# ' + msg)
+        log('# ' + msg)
       }
 
       b.end = function (msg) {
@@ -56,19 +67,32 @@ function benchmark (name, fn, only) {
         cur = null
         var time = hrtime(begin)
 
-        total[0] += time[0]
-        total[1] += time[1]
-        while (total[1] >= 1e9) {
-          total[1] -= 1e9
-          total[0]++
+        if (repetitions === 0) {
+          total[0] += time[0]
+          total[1] += time[1]
+          while (total[1] >= 1e9) {
+            total[1] -= 1e9
+            total[0]++
+          }
         }
 
-        console.log('ok ~' + prettyHrtime(time) + ' ' + rawTime(time) + '\n')
-        release()
+        log('ok ~' + prettyHrtime(time) + ' ' + rawTime(time) + '\n')
+
+        if (repetitions > 0) {
+          repetitions--
+          process.nextTick(run)
+        } else {
+          release()
+        }
       }
 
       fn(b)
-    })
+    }
+
+    function log (msg) {
+      if (repetitions > 0) return
+      console.log(msg)
+    }
   })
 }
 
