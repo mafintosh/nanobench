@@ -1,7 +1,5 @@
-module.exports = parse
-
-function parse (data) {
-  var lines = data.toString().trim().split('\n')
+module.exports = function parse (data) {
+  const lines = data.toString().trim().split('\n')
     .map(function (line) {
       return line.trim()
     })
@@ -9,10 +7,10 @@ function parse (data) {
       return line
     })
 
-  var output = {}
+  const output = {}
 
   while (lines.length && !output.type) {
-    var header = lines.shift().match(/^NANOBENCH(?: version (\d+))?$/)
+    const header = lines.shift().match(/^NANOBENCH(?: version (\d+))?$/)
     if (!header) continue
     output.type = 'NANOBENCH'
     output.version = Number(header[1] || 1)
@@ -30,17 +28,17 @@ function parse (data) {
   output.error = null
   output.time = null
 
-  var benchmark = null
+  let benchmark = null
 
   while (lines.length) {
-    var next = lines.shift()
+    const next = lines.shift()
     if (next[0] === '>') {
       output.command = next.slice(1).trim()
       continue
     }
 
     if (!benchmark && next[0] === '#') {
-      benchmark = {name: null, output: [], error: null, time: null}
+      benchmark = { name: null, output: [], error: null, time: null }
       benchmark.name = next.slice(1).trim()
       continue
     }
@@ -80,10 +78,10 @@ function parse (data) {
 }
 
 function time (line) {
-  var i = line.lastIndexOf('(')
-  var j = line.lastIndexOf(')')
+  const i = line.lastIndexOf('(')
+  const j = line.lastIndexOf(')')
   if (i === -1 || j === -1 || j < i) throw new Error('Could not parse benchmark time')
-  var parsed = line.slice(i + 1, j).match(/^(\d+)\s*s\s*\+\s*(\d+)\s*ns$/)
+  const parsed = line.slice(i + 1, j).match(/^(\d+)\s*s\s*\+\s*(\d+)\s*ns$/)
   if (!parsed) throw new Error('Could not parse benchmark time')
   return [Number(parsed[1]), Number(parsed[2])]
 }

@@ -1,12 +1,11 @@
-var mutexify = require('mutexify')
-var hrtime = require('browser-process-hrtime')
-var prettyHrtime = require('pretty-hrtime')
-var path = require('path')
-var lock = mutexify()
-var one = false
-var cur = null
-var runs = 0
-var total = [0, 0]
+const mutexify = require('mutexify')
+const prettyHrtime = require('pretty-hrtime')
+const path = require('path')
+const lock = mutexify()
+let one = false
+let cur = null
+let runs = 0
+const total = [0, 0]
 
 module.exports = global.__NANOBENCH__ ? require(global.__NANOBENCH__) : benchmark
 
@@ -22,8 +21,12 @@ function rawTime (hr) {
   return '(' + hr[0] + ' s + ' + hr[1] + ' ns)'
 }
 
+function toMillis (hr) {
+  return hr[0] * 1e3 + hr[1] / 1e6
+}
+
 function benchmark (name, fn, only) {
-  process.nextTick(function () {
+  process.nextTick(async function () {
     if (one && !only) return
     if (runs === 0) {
       console.log('NANOBENCH version 2\n> ' + command() + '\n')
@@ -33,11 +36,11 @@ function benchmark (name, fn, only) {
     lock(function (release) {
       console.log('# ' + name)
 
-      var b = cur = {}
-      var begin = hrtime()
+      const b = cur = {}
+      let begin = process.hrtime()
 
       b.start = function () {
-        begin = hrtime()
+        begin = process.hrtime()
       }
 
       b.error = function (err) {
@@ -50,21 +53,26 @@ function benchmark (name, fn, only) {
         console.log('# ' + msg)
       }
 
+      b.elapsed = function () {
+        return toMillis(process.hrtime(begin))
+      }
+
       b.end = function (msg) {
         if (msg) b.log(msg)
 
         cur = null
-        var time = hrtime(begin)
+        const elapsed = process.hrtime(begin)
 
-        total[0] += time[0]
-        total[1] += time[1]
+        total[0] += elapsed[0]
+        total[1] += elapsed[1]
         while (total[1] >= 1e9) {
           total[1] -= 1e9
           total[0]++
         }
 
-        console.log('ok ~' + prettyHrtime(time) + ' ' + rawTime(time) + '\n')
+        console.log('ok ~' + prettyHrtime(elapsed) + ' ' + rawTime(elapsed) + '\n')
         release()
+        return toMillis(elapsed)
       }
 
       fn(b)
@@ -83,7 +91,7 @@ process.on('exit', function () {
 })
 
 function command () {
-  var argv = process.argv.slice(0)
+  let argv = process.argv.slice(0)
   if (argv[0] === '/usr/local/bin/node') argv[0] = 'node'
   if (argv[1] === path.join(__dirname, 'run.js')) {
     argv.shift()
@@ -91,7 +99,7 @@ function command () {
   }
 
   argv = argv.map(function (name) {
-    var cwd = process.cwd() + path.sep
+    const cwd = process.cwd() + path.sep
     return name.indexOf(cwd) === 0 ? name.slice(cwd.length) : name
   })
 
