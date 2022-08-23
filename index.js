@@ -26,7 +26,7 @@ function toMillis (hr) {
 }
 
 function benchmark (name, fn, only) {
-  process.nextTick(async function () {
+  process.nextTick(function () {
     if (one && !only) return
     if (runs === 0) {
       console.log('NANOBENCH version 2\n> ' + command() + '\n')
