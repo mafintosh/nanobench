@@ -1,12 +1,12 @@
-var bench = require('./')
+const bench = require('./')
 
 bench('sha1 200.000 times', function (b) {
-  var crypto = require('crypto')
-  var data = new Buffer('hello world')
+  const crypto = require('crypto')
+  let data = Buffer.from('hello world')
 
   b.start()
 
-  for (var i = 0; i < 200000; i++) {
+  for (let i = 0; i < 200000; i++) {
     data = crypto.createHash('sha1').update(data).digest()
   }
 
@@ -14,12 +14,12 @@ bench('sha1 200.000 times', function (b) {
 })
 
 bench('sha256 200.000 times', function (b) {
-  var crypto = require('crypto')
-  var data = new Buffer('hello world')
+  const crypto = require('crypto')
+  let data = Buffer.from('hello world')
 
   b.start()
 
-  for (var i = 0; i < 200000; i++) {
+  for (let i = 0; i < 200000; i++) {
     data = crypto.createHash('sha256').update(data).digest()
   }
 

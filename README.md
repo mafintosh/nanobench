@@ -61,7 +61,8 @@ ok ~1.15 s (1 s + 152152365 ns)
 Add a new benchmark. `run` is called with a benchmark object, `b` that has the following methods
 
 * `b.start()` - Start the benchmark. If not called the bench will be tracked from the beginning of the function.
-* `b.end()` - End the benchmark.
+* `b.end()` - End the benchmark. Returns the time elapsed in milliseconds.
+* `b.elapsed()` - Return the time elapsed in milliseconds.
 * `b.error(err)` - Benchmark failed. Report error.
 * `b.log(msg)` - Log out a message
 
